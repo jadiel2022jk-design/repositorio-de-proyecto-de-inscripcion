@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enfermería</title>
+    <link rel="stylesheet" href="style.css">
+
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <h1>EduRegister</h1>
+        <p>Área de Enfermería</p>
+    </div>
+    <nav>
+        <a href="index.html">Inicio</a>
+    </nav>
+</header>
+
+<section class="hero-area enfermeria-bg">
+    <div class="overlay"></div>
+    <div class="hero-content">
+        <h2>Área de Enfermería</h2>
+        <p>Capacitación médica, salud y primeros auxilios.</p>
+    </div>
+</section>
+
+<section class="beneficios">
+    <h2>Beneficios</h2>
+    <div class="beneficios-grid">
+        <div class="beneficio">
+            <h3>Primeros Auxilios</h3>
+            <p>Atención inmediata y emergencias.</p>
+        </div>
+        <div class="beneficio">
+            <h3>Prácticas Médicas</h3>
+            <p>Experiencia clínica profesional.</p>
+        </div>
+        <div class="beneficio">
+            <h3>Salud Comunitaria</h3>
+            <p>Prevención y atención sanitaria.</p>
+        </div>
+    </div>
+</section>
+
+<section class="registro">
+    <h2>Formulario de Registro</h2>
+
+    <form id="formulario">
+
+        <input type="text"  id="nombre"      placeholder="Nombre Completo"    required>
+        <input type="email" id="email"       placeholder="Correo Electrónico" required>
+        <input type="text"  id="telefono"    placeholder="Teléfono"           required>
+        <textarea           id="comentarios" placeholder="Comentarios"></textarea>
+
+        <button type="submit" id="btnEnviar">Enviar Solicitud</button>
+
+        <p id="mensaje-estado" style="text-align:center; margin-top:10px; font-size:16px;"></p>
+
+    </form>
+</section>
+
+<script>
+    // ─── CONFIGURACIÓN EMAILJS ────────────────────────────────────────────────
+    const PUBLIC_KEY  = "f5y30eks8KLd-p7FH";   // ← Reemplaza con tu Public Key
+    const SERVICE_ID  = "service_14d28xu";   // ← Reemplaza con tu Service ID
+    const TEMPLATE_ID = "template_ckspk1j";  // ← Reemplaza con tu Template ID
+    // ─────────────────────────────────────────────────────────────────────────
+
+    emailjs.init({ publicKey: PUBLIC_KEY });
+
+    document.getElementById("formulario").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const btn    = document.getElementById("btnEnviar");
+        const estado = document.getElementById("mensaje-estado");
+
+        btn.disabled    = true;
+        btn.textContent = "Enviando...";
+        estado.style.color = "white";
+        estado.textContent = "";
+
+        const templateParams = {
+            area:       "Enfermería",
+            from_name:  document.getElementById("nombre").value,
+            from_email: document.getElementById("email").value,
+            phone:      document.getElementById("telefono").value,
+            message:    document.getElementById("comentarios").value
+        };
+
+        emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams)
+            .then(() => {
+                estado.style.color = "#4ade80";
+                estado.textContent = "✅ Solicitud enviada con éxito. ¡Pronto nos comunicaremos contigo!";
+                document.getElementById("formulario").reset();
+            })
+            .catch((error) => {
+                estado.style.color = "#f87171";
+                estado.textContent = "❌ Hubo un error al enviar. Por favor intenta de nuevo.";
+                console.error("EmailJS error:", error);
+            })
+            .finally(() => {
+                btn.disabled    = false;
+                btn.textContent = "Enviar Solicitud";
+            });
+    });
+</script>
+
+</body>
+</html>
